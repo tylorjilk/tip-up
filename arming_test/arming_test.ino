@@ -14,8 +14,8 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
-const char WiFiAPPSK[] = "tomars";
-const int onpin = 5; // IO5 on the Esp8266 WROOM 02
+const char WiFiAPPSK[] = "heytheresexy";
+const int onpin = 2; // IO5 on the Esp8266 WROOM 02
 
 WiFiServer server(80);
 
@@ -62,9 +62,9 @@ void loop() {
   // Match the request
   int val = -1; // We'll use 'val' to keep track of both the
                 // request type (read/set) and value if set.
-  if (req.indexOf("/disarm") != -1)
+  if (req.indexOf("/off") != -1)
     val = 0; // Will write LED low
-  else if (req.indexOf("/arm") != -1)
+  else if (req.indexOf("/on") != -1)
     val = 1; // Will write LED high
   else if (req.indexOf("/status") != -1)
     val = -2; // Will print pin reads
@@ -77,39 +77,40 @@ void loop() {
   client.flush();
 
   // Prepare the response. Start with the common header:
-  String s = "HTTP/1.1 200 OK\r\n";
-  s += "Content-Type: text/html\r\n\r\n";
-  s += "<!DOCTYPE HTML>\r\n<html>\r\n";
-  s += "<head><style>p{text-align:center;font-size:24px;font-family:helvetica;padding:30px;border:1px solid black;background-color:powderblue}</style></head><body>";
+  String s = "";
+  // String s = "HTTP/1.1 200 OK\r\n";
+ //  s += "Content-Type: text/html\r\n\r\n";
+ // s += "<!DOCTYPE HTML>\r\n<html>\r\n";
+  //s += "<head><style>p{text-align:center;font-size:24px;font-family:helvetica;padding:30px;border:1px solid black;background-color:powderblue}</style></head><body>";
 
   // If we're setting the LED, print out a message saying we did
   if (val == 0)
   {
-    s += "<p>Board is now <b>disarmed</b></p>";
+    s += "        off";
   } 
   else if (val == 1)
   {
-    s += "<p>Board is now <b>armed!</b></p>";
+    s += "        on";
   } 
   else if (val == -2)
   {
     // s += "<br>"; // Go to the next line.
-    s += "<p>Status of output pin: ";
+    s += "        Status: ";
     if(digitalRead(onpin))
     {
-      s += "<b>armed!</b></p>";
+      s += "on";
     } 
     else
     {
-      s += "<b>disarmed.</b></p>";
+      s += "off";
     }
   } 
   else
   {
-    s += "<p>Invalid Request.<br> Try /disarm, /arm, or /status.</p>";
+    s += "        Invalid Request. Try /disarm, /arm, or /status.";
   }
 
-  s += "</body></html>\n";
+  //s += "</body></html>\n";
 
   // Send the response to the client
   client.print(s);

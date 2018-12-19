@@ -14,11 +14,6 @@
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include "HTTPUtils.hpp"
-#include "min_support.h"
-#include "min-irec.h"
-#include "min.h"
-#include "min.c"
 
 void poll_min();
 void min_tx_byte(uint8_t port, uint8_t byte);
